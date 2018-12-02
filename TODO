@@ -1,0 +1,3 @@
+Merge Xiaomi and upstream changes of following drivers:
+- drivers/staging/android/ion/
+- drivers/media/platform/msm/camera/
