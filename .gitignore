@@ -121,3 +121,6 @@ techpack/audio/
 
 # fetched Android config fragments
 kernel/configs/android-*.cfg
+
+# Ignore make output 
+/out/
