@@ -10,6 +10,7 @@
 #include <linux/semaphore.h>
 #include <linux/workqueue.h>
 #include <linux/pm.h>
+#include <linux/input.h>
 
 #include <asm/current.h>
 
@@ -48,6 +49,7 @@ struct _hall_device {
 	struct wakeup_source *hall_wakelock;
 	int hall_status;
 };
+static struct input_dev *slide_input;
 
 struct _hall_device *g_st_halls;
 struct semaphore g_st_semhallirq;
@@ -62,8 +64,12 @@ static void hall_notify_work_func(struct work_struct *work)
 	HALLS_LOG(LOGTAG " iRet1 %d	iRet2 %d", iRet1, iRet2);
 	if (iRet1 == 0 && iRet2 == 1) {
 		g_st_halls->hall_status = 1;
+		input_report_switch(slide_input, SW_LID, 1);
+		input_sync(slide_input);
 	} else if (iRet1 == 1 && iRet2 == 0) {
 		g_st_halls->hall_status = 0;
+		input_report_switch(slide_input, SW_LID, 0);
+		input_sync(slide_input);
 	} else {
 		g_st_halls->hall_status = 2;
 	}
@@ -255,6 +261,34 @@ static const struct file_operations halls_fops = {
 	.open = halls_open
 };
 
+static int slide_input_device_create(void){
+	int err = 0;
+
+	slide_input = input_allocate_device();
+	if (!slide_input) {
+		err = -ENOMEM;
+		goto exit;
+	}
+
+	slide_input->name = "smartcover";
+	slide_input->phys = "/dev/input/smartcover";
+
+	set_bit(EV_SW, slide_input->evbit);
+	set_bit(SW_LID, slide_input->swbit);
+
+	err = input_register_device(slide_input);
+	if (err) {
+		goto exit_free;
+	}
+	return 0;
+
+exit_free:
+	input_free_device(slide_input);
+	slide_input = NULL;
+exit:
+	return err;
+}
+
 static int __init halls_init(void)
 {
 	int ret;
@@ -284,6 +318,7 @@ static int __init halls_init(void)
 		return ret;
 	}
 
+	slide_input_device_create();
 	g_st_halls->hall_status = 0;
 	INIT_DELAYED_WORK(&g_st_halls->notify_work, hall_notify_work_func);
 
@@ -302,6 +337,7 @@ static void __exit halls_exit(void)
 {
 	gpio_free(DEF_HALL_GPIO_1);
 	gpio_free(DEF_HALL_GPIO_2);
+	input_unregister_device(slide_input);
 }
 
 module_exit(halls_exit);
