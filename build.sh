@@ -23,7 +23,7 @@ export KCFLAGS=-mno-android
 DEFCONFIG="perseus_user_defconfig"
 
 # Kernel Details
-VER=".v01"
+VER=".v03"
 
 # Paths
 KERNEL_DIR=`pwd`
