@@ -12,9 +12,10 @@ clear
 THREAD="-j$(grep -c ^processor /proc/cpuinfo)"
 KERNEL="Image"
 DTBIMAGE="dtb"
-export CLANG_PATH=~/bin/linux-x86/clang-4691093/bin/
+export CLANG_PATH=~/bin/sdclang-6.0/bin/
 export PATH=${CLANG_PATH}:${PATH}
 export LD_LIBRARY_PATH=:${LD_LIBRARY_PATH}
+#export CC=${CLANG_PATH}clang
 export CLANG_TRIPLE=aarch64-linux-gnu-
 export CROSS_COMPILE=~/bin/aarch64-linux-android-4.9/bin/aarch64-linux-android-
 export DTC_EXT=/home/androplus/bin/dtc
