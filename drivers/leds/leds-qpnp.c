@@ -1895,7 +1895,6 @@ static void qpnp_led_set(struct led_classdev *led_cdev,
 				enum led_brightness value)
 {
 	struct qpnp_led_data *led;
-	int rc;
 
 	led = container_of(led_cdev, struct qpnp_led_data, cdev);
 	if (value < LED_OFF) {

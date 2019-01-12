@@ -1859,11 +1859,6 @@ static int32_t nvt_ts_probe(struct i2c_client *client, const struct i2c_device_i
 		NVT_ERR("Cannot create sysfs structure!\n");
 	}
 
-	ret = novatek_input_symlink(ts);
-	if (ret < 0) {
-		NVT_ERR("Failed to symlink input device!\n");
-	}
-
 	ts->event_wq = alloc_workqueue("nvt-event-queue",
 			    WQ_UNBOUND | WQ_HIGHPRI | WQ_CPU_INTENSIVE, 1);
 	if (!ts->event_wq) {
