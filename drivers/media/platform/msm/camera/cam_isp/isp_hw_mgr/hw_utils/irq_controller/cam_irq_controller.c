@@ -592,8 +592,14 @@ static void cam_irq_controller_th_processing(
 				controller->irq_status_arr[0],
 				(void *)th_payload);
 
+		if (rc && bh_cmd) {
+			irq_bh_api->put_bh_payload_func(
+				evt_handler->bottom_half, &bh_cmd);
+			continue;
+		}
+
 		if (!rc && evt_handler->bottom_half_handler) {
-			CAM_DBG(CAM_ISP, "Enqueuing bottom half for %s",
+			CAM_DBG(CAM_IRQ_CTRL, "Enqueuing bottom half for %s",
 				controller->name);
 			if (evt_handler->bottom_half_enqueue_func) {
 				evt_handler->bottom_half_enqueue_func(

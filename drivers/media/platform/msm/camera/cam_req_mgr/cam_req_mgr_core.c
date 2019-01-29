@@ -1898,8 +1898,8 @@ static int cam_req_mgr_cb_notify_err(
 		rc = -EPERM;
 		goto end;
 	}
-	crm_timer_reset(link->watchdog);
 	spin_unlock_bh(&link->link_state_spin_lock);
+	crm_timer_reset(link->watchdog);
 
 	task = cam_req_mgr_workq_get_task(link->workq);
 	if (!task) {
@@ -1961,8 +1961,8 @@ static int cam_req_mgr_cb_notify_trigger(
 		rc = -EPERM;
 		goto end;
 	}
-	crm_timer_reset(link->watchdog);
 	spin_unlock_bh(&link->link_state_spin_lock);
+	crm_timer_reset(link->watchdog);
 
 	task = cam_req_mgr_workq_get_task(link->workq);
 	if (!task) {
